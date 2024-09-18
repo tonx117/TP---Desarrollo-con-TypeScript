@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../../public/EquipmentList.css'; // Importa el CSS personalizado
 
 interface Equipment {
   _id: string;
@@ -14,7 +15,7 @@ interface Equipment {
 const EquipmentList: React.FC = () => {
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null); // Para manejar el equipo seleccionado
+  const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null); 
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
   const navigate = useNavigate();
@@ -50,84 +51,63 @@ const EquipmentList: React.FC = () => {
   };
 
   const handleDetails = (equipment: Equipment) => {
-    setSelectedEquipment(equipment); // Mostrar el equipo seleccionado en el pop-up
+    setSelectedEquipment(equipment); 
   };
 
   const closePopup = () => {
-    setSelectedEquipment(null); // Cerrar el pop-up
+    setSelectedEquipment(null);
   };
 
   const handleLogout = () => {
-    // Eliminar token y rol del localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    // Redirigir a la página de inicio de sesión
     navigate('/login');
   };
 
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div className="equipment-container">
       <h2>Equipos</h2>
-      {/* Botón para cerrar sesión */}
       <button onClick={handleLogout}>Cerrar Sesión</button>
       
       {role === 'admin' && (
-        <button onClick={() => navigate('/AddEquipment')}>Agregar Equipo</button>
+        <button 
+          className="add-equipment-btn" 
+          onClick={() => navigate('/AddEquipment')}
+        >
+          Agregar Equipo
+        </button>
       )}
       <h3>Lista de Equipos</h3>
-      <ul>
+      <ul className="equipment-list">
         {equipments.map((equip) => (
           <li key={equip._id}>
             {equip.name} - {equip.type}
-            <button onClick={() => handleDetails(equip)}>Detalles</button>
-            {role === 'admin' && (
-              <button onClick={() => handleDelete(equip._id)}>Eliminar</button>
-            )}
+            <div>
+              <button onClick={() => handleDetails(equip)}>Detalles</button>
+              {role === 'admin' && (
+                <button onClick={() => handleDelete(equip._id)}>Eliminar</button>
+              )}
+            </div>
           </li>
         ))}
       </ul>
 
-      {/* Pop-up para mostrar los detalles */}
       {selectedEquipment && (
-        <div style={popupOverlayStyle} onClick={closePopup}>
-          <div style={popupStyle} onClick={(e) => e.stopPropagation()}>
+        <div className="popup-overlay" onClick={closePopup}>
+          <div className="popup" onClick={(e) => e.stopPropagation()}>
             <h3>{selectedEquipment.name}</h3>
-            <p style={{ color: 'black' }}><strong>Tipo:</strong> {selectedEquipment.type}</p>
-            <p style={{ color: 'black' }}><strong>Estado:</strong> {selectedEquipment.status}</p>
-            <p style={{ color: 'black' }}><strong>Ubicacion:</strong> {selectedEquipment.location}</p>
-            <p style={{ color: 'black' }}><strong>Fecha de adquisicion:</strong> {selectedEquipment.acquisitionDate}</p>
+            <p><strong>Tipo:</strong> {selectedEquipment.type}</p>
+            <p><strong>Estado:</strong> {selectedEquipment.status}</p>
+            <p><strong>Ubicacion:</strong> {selectedEquipment.location}</p>
+            <p><strong>Fecha de adquisicion:</strong> {selectedEquipment.acquisitionDate}</p>
             <button onClick={closePopup}>Cerrar</button>
           </div>
         </div>
       )}
     </div>
   );
-};
-
-// Estilos en línea para el pop-up y su overlay
-const popupOverlayStyle: React.CSSProperties = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100vw',
-  height: '100vh',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  zIndex: 1000,
-};
-
-const popupStyle: React.CSSProperties = {
-  backgroundColor: 'white',
-  padding: '20px',
-  borderRadius: '8px',
-  width: '400px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  textAlign: 'left',
-  color: 'black', // Asegurar que todo el texto dentro del pop-up sea negro
 };
 
 export default EquipmentList;

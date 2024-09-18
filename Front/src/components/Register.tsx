@@ -30,7 +30,7 @@ const Register: React.FC = () => {
   
 
   return (
-    <div>
+    <div className='divc'>
       <h2>Registro</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
@@ -39,6 +39,7 @@ const Register: React.FC = () => {
           <input
             type="text"
             value={username}
+            placeholder="Usuario"
             onChange={(e) => setUsername(e.target.value)}
             required
           />
@@ -48,6 +49,7 @@ const Register: React.FC = () => {
           <input
             type="password"
             value={password}
+            placeholder="Contraseña"
             onChange={(e) => setPassword(e.target.value)}
             required
           />

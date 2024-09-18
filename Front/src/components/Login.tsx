@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../../public/Login.css'
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -18,6 +19,7 @@ const Login: React.FC = () => {
       // Guardar el token y el rol en localStorage
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('role', response.data.role);
+      console.log(response.data.token)
 
       alert('Inicio de sesión exitoso');
 
@@ -32,8 +34,10 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className='divc'>
+      <h2>Login</h2>
       <form onSubmit={handleLogin}>
+      <label>Nombre de Usuario:</label>
         <input
           type="text"
           value={username}
@@ -41,6 +45,7 @@ const Login: React.FC = () => {
           placeholder="Usuario"
           required
         />
+        <label>Contraseña:</label>
         <input
           type="password"
           value={password}
